@@ -80,8 +80,8 @@ freshfold/
 │   │   │   ├── orderRoutes.js      # Public customer order endpoints (/api/orders/*)
 │   │   │   └── planRoutes.js       # Public catalog endpoint (/api/plans)
 │   │   └── server.js               # Express application bootstrap & route mounting
-│   ├── .env.example                # Template with environment variable placeholders
-│   ├── .env                        # Local active environment variables
+│   ├── .env.example                # Template with environment variable placeholders (committed)
+│   ├── .env                        # Local secrets (git-ignored, never committed)
 │   └── package.json
 │
 ├── frontend/
@@ -91,7 +91,7 @@ freshfold/
 │   │   │   │   ├── AdminLogin.jsx      # Modal for admin credentials sign-in
 │   │   │   │   ├── AdminDashboard.jsx  # Operations console (Bookings & Plans tabs)
 │   │   │   │   └── PlanModal.jsx       # Modal for creating and editing laundry plans
-│   │   │   ├── Navbar.jsx          # Header with logo, phone helpline, and Admin portal button
+│   │   │   ├── Navbar.jsx          # Header with logo, navigation links, and Admin portal button
 │   │   │   ├── Hero.jsx            # Hero banner with value proposition and CTAs
 │   │   │   ├── Services.jsx        # Dynamic services grid showing live ₹ rates
 │   │   │   ├── OrderForm.jsx       # Pickup booking form with validation and live INR estimates
@@ -122,25 +122,29 @@ freshfold/
 
 ---
 
-## 🔐 Admin Credentials & Environment Configuration
+## 🔐 Environment Configuration & Security
 
-### Default Credentials
-Upon initial boot, the backend automatically initializes an administrator account in MongoDB:
-- **Admin Email**: `admin@freshfold.in`
-- **Admin Password**: `FreshFold@Admin2026`
+> [!IMPORTANT]
+> **Security Notice**: Actual credentials and JWT secrets must **never** be committed to a public Git repository. The `.env` file is excluded via `.gitignore`. Always use `.env.example` as a template for setting up local environments.
 
-### Environment Variables (`backend/.env`)
+### Setting Up Environment Variables (`backend/.env`)
 
-Configure your environment settings in `backend/.env` (use `backend/.env.example` as a template):
+1. Copy the example template:
+   ```bash
+   cp backend/.env.example backend/.env
+   ```
 
-```env
-PORT=5000
-MONGO_URI=mongodb://127.0.0.1:27017/freshfold
-CLIENT_URL=http://localhost:5173
-JWT_SECRET=freshfold_super_secret_jwt_key_2026_dev
-ADMIN_EMAIL=admin@freshfold.in
-ADMIN_PASSWORD=FreshFold@Admin2026
-```
+2. Configure your values inside `backend/.env`:
+   ```env
+   PORT=5000
+   MONGO_URI=mongodb://127.0.0.1:27017/freshfold
+   CLIENT_URL=http://localhost:5173
+   JWT_SECRET=your_secure_jwt_secret_key
+   ADMIN_EMAIL=your_admin_email@example.com
+   ADMIN_PASSWORD=your_secure_admin_password
+   ```
+
+3. **Auto-Seeding**: On first boot, the server checks MongoDB. If no administrator exists, it automatically creates an admin account using the `ADMIN_EMAIL` and `ADMIN_PASSWORD` defined in your local `.env`, securely hashing the password with `bcryptjs`.
 
 ---
 
@@ -164,14 +168,20 @@ ADMIN_PASSWORD=FreshFold@Admin2026
    npm install
    ```
 
-3. Start the backend development server:
+3. Ensure your local `backend/.env` file is created:
+   ```bash
+   cp .env.example .env
+   ```
+   *(Update `JWT_SECRET`, `ADMIN_EMAIL`, and `ADMIN_PASSWORD` with your desired credentials.)*
+
+4. Start the backend development server:
    ```bash
    npm run dev
    ```
-   > The server will start on port 5000, connect to MongoDB, seed the default admin account, and seed the initial laundry plans:
+   > The server will start on port 5000, connect to MongoDB, initialize the admin account, and seed initial laundry plans:
    > ```text
    > 🍃 MongoDB Connected: 127.0.0.1/freshfold
-   > 👤 Admin account seeded: admin@freshfold.in
+   > 👤 Admin account seeded: <your_admin_email>
    > 🧺 Initial laundry service plans seeded successfully
    > 🚀 FreshFold Server listening on port 5000
    > ```
@@ -217,7 +227,7 @@ ADMIN_PASSWORD=FreshFold@Admin2026
 ### Administrator Experience (Protected)
 1. **Sign In**:
    - Click the **Admin** button in the header (or **Admin Operations Portal** in the footer).
-   - Enter `admin@freshfold.in` and `FreshFold@Admin2026`.
+   - Enter your configured admin email and password (as specified in `backend/.env`).
 2. **Manage Bookings**:
    - View all customer orders with pickup schedules, customer details, and price in ₹.
    - Use the status dropdown on any order to advance it (e.g., from `Pickup Scheduled` ➔ `In Wash & Care` ➔ `Steam Ironed` ➔ `Out for Delivery` ➔ `Delivered`).
@@ -285,8 +295,8 @@ ADMIN_PASSWORD=FreshFold@Admin2026
 #### Example: Admin Sign-In (`POST /api/admin/login`)
 ```json
 {
-  "email": "admin@freshfold.in",
-  "password": "FreshFold@Admin2026"
+  "email": "your_admin_email@example.com",
+  "password": "your_secure_admin_password"
 }
 ```
 **Response** (`200 OK`):
@@ -297,7 +307,7 @@ ADMIN_PASSWORD=FreshFold@Admin2026
   "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
   "admin": {
     "id": "6ab53c98452c7841cae825a6",
-    "email": "admin@freshfold.in",
+    "email": "your_admin_email@example.com",
     "name": "FreshFold Admin",
     "role": "admin"
   }

@@ -3,7 +3,7 @@ import { Lock, Mail, Shield, AlertCircle, ArrowRight, Eye, EyeOff, X } from 'luc
 import { adminLogin } from '../../services/api';
 
 export default function AdminLogin({ isOpen, onClose, onLoginSuccess }) {
-  const [email, setEmail] = useState('admin@freshfold.in');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -80,7 +80,7 @@ export default function AdminLogin({ isOpen, onClose, onLoginSuccess }) {
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="admin@freshfold.in"
+                placeholder="admin@example.com"
                 className="w-full pl-10 pr-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition"
               />
             </div>

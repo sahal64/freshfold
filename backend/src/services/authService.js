@@ -16,8 +16,14 @@ export async function seedAdminIfNoneExists() {
   try {
     const count = await Admin.countDocuments();
     if (count === 0) {
-      const email = process.env.ADMIN_EMAIL || 'admin@freshfold.in';
-      const rawPassword = process.env.ADMIN_PASSWORD || 'FreshFold@Admin2026';
+      const email = process.env.ADMIN_EMAIL;
+      const rawPassword = process.env.ADMIN_PASSWORD;
+
+      if (!email || !rawPassword) {
+        console.warn('⚠️ Admin auto-seeding skipped: ADMIN_EMAIL and ADMIN_PASSWORD must be configured in your .env file.');
+        return;
+      }
+
       const hashedPassword = await bcrypt.hash(rawPassword, 10);
 
       await Admin.create({

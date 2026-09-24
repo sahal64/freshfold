@@ -231,7 +231,7 @@ export default function AdminDashboard({ adminUser, onExitAdmin, onPlansUpdated 
 
           <div className="flex items-center gap-3">
             <span className="text-xs text-slate-400 hidden sm:inline-block">
-              Signed in: <strong className="text-slate-200">{adminUser?.email || 'admin@freshfold.in'}</strong>
+              Signed in: <strong className="text-slate-200">{adminUser?.email || 'Administrator'}</strong>
             </span>
 
             <button
