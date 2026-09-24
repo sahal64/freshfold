@@ -3,7 +3,8 @@
  * Separates React components from network fetch logic.
  */
 
-const API_BASE = '/api';
+const rawApiUrl = import.meta.env.VITE_API_URL || import.meta.env.API_BASE || '';
+const API_BASE = rawApiUrl ? `${rawApiUrl.replace(/\/+$/, '')}/api` : '/api';
 const TOKEN_KEY = 'freshfold_admin_token';
 const ADMIN_USER_KEY = 'freshfold_admin_user';
 

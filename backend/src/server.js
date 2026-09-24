@@ -13,12 +13,27 @@ dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 5000;
-const CLIENT_URL = process.env.CLIENT_URL || 'http://localhost:5173';
+const rawClientUrl = process.env.CLIENT_URL || 'http://localhost:5173';
+const normalizedClientUrl = rawClientUrl.replace(/\/+$/, '');
+
+const allowedOrigins = new Set([
+  normalizedClientUrl,
+  `${normalizedClientUrl}/`,
+  'https://freshfold-nine.vercel.app',
+  'https://freshfold-nine.vercel.app/',
+  'http://localhost:5173',
+  'http://127.0.0.1:5173',
+]);
 
 // 1. Core Middlewares
 app.use(
   cors({
-    origin: [CLIENT_URL, 'http://localhost:5173', 'http://127.0.0.1:5173'],
+    origin: function (origin, callback) {
+      if (!origin || allowedOrigins.has(origin) || allowedOrigins.has(origin.replace(/\/+$/, ''))) {
+        return callback(null, true);
+      }
+      return callback(new Error(`CORS blocked for origin: ${origin}`));
+    },
     credentials: true,
   })
 );

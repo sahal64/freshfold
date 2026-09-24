@@ -1,15 +1,15 @@
 import { Router } from 'express';
 import { login, getProfile } from '../controllers/authController.js';
 import {
-  getAllPlans,
-  createPlan,
-  updatePlan,
-  togglePlanStatus,
-  deletePlan,
+    getAllPlans,
+    createPlan,
+    updatePlan,
+    togglePlanStatus,
+    deletePlan,
 } from '../controllers/planController.js';
 import {
-  getAllOrdersAdmin,
-  updateOrderStatus,
+    getAllOrdersAdmin,
+    updateOrderStatus,
 } from '../controllers/orderController.js';
 import { requireAdminAuth } from '../middleware/authMiddleware.js';
 
